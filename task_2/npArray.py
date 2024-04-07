@@ -14,4 +14,3 @@ start_time = time.time()
 new_ar = np.frombuffer(ar_bytes, dtype = A.dtype).reshape(A.shape)
 conv_time_taken = time.time() - start_time
 print("time taken : ",conv_time_taken," seconds" )
-
