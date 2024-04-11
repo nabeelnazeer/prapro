@@ -3,6 +3,7 @@ import requests
 import os
 import psutil
 import time
+import threading
 
 def download_file(url, local_filename):
     with requests.get(url, stream=True) as r:
@@ -13,49 +14,42 @@ def download_file(url, local_filename):
 
 def download_images(link, output_folder, num_images):
     if not os.path.exists("links.parquet"):
-        print("downloading parquet file...")
+        print("Downloading parquet file...")
         download_file(link, "links.parquet")
 
     table = pq.read_table("links.parquet")
     links = table.to_pandas()
 
-    os.makedirs(output_folder, exists_ok = True)
+    os.makedirs(output_folder, exist_ok=True)
 
-    for i, link  in enumerate(links['image_url'][:num_images]):
+    for i, img_link in enumerate(links['image_url'][:num_images]):
         filename = os.path.join(output_folder, f"image_{i}.jpg")
         if not os.path.exists(filename):
-            print(f"downloading {filename}")
-            response = request.get(link, stream =True)
+            print(f"Downloading {filename}")
+            response = requests.get(img_link, stream=True)
             with open(filename, 'wb') as f:
-                for chunk in response.iter_count(chunk_size = 1024):
+                for chunk in response.iter_content(chunk_size=1024):
                     f.write(chunk)
         else:
-            print(f"{filename} already exists, skipping. ")
+            print(f"{filename} already exists, skipping.")
 
 def monitor_performance(interval):
-    while true:
-
+    while True:
         cpu_percent = psutil.cpu_percent(interval=None)
+        print(f"CPU Usage: {cpu_percent}%")
 
-        print(f"cpu usage : {cpu_percent}%")
+        net_io = psutil.net_io_counters()
+        print(f"Network Usage - Sent: {net_io.bytes_sent} bytes, Received: {net_io.bytes_recv} bytes")
 
-
-        #network usage
-
-        net_usage = psutil.net_io_counters()
-        print(f"Network Usage - Sent: {net_usage.bytes_sent} bytes, Received: {net_usage.bytes_recv} bytes")
+        time.sleep(interval)
 
 def main():
-
     link = "https://drive.google.com/uc?export=download&id=1ym_RbsjN41cwXZLeB3NibN7h7Vbz1AgP"
-
-    output_folder = "downloaded images"
-
+    output_folder = "downloaded_images"
     num_images = 1000
 
     monitor_interval = 10
-    monitor_process = psutil.Process()
-    monitor_thread = psutil.Process(target = monitor_performance, args= (monitor_interval))
+    monitor_thread = threading.Thread(target=monitor_performance, args=(monitor_interval,))
 
     monitor_thread.start()
 
@@ -65,8 +59,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-           
