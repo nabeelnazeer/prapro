@@ -45,5 +45,28 @@ def monitor_performance(interval):
         net_usage = psutil.net_io_counters()
         print(f"Network Usage - Sent: {net_usage.bytes_sent} bytes, Received: {net_usage.bytes_recv} bytes")
 
-        
+def main():
+
+    link = "https://drive.google.com/uc?export=download&id=1ym_RbsjN41cwXZLeB3NibN7h7Vbz1AgP"
+
+    output_folder = "downloaded images"
+
+    num_images = 1000
+
+    monitor_interval = 10
+    monitor_process = psutil.Process()
+    monitor_thread = psutil.Process(target = monitor_performance, args= (monitor_interval))
+
+    monitor_thread.start()
+
+    download_images(link, output_folder, num_images)
+
+    monitor_thread.terminate()
+
+if __name__ == "__main__":
+    main()
+
+
+
+
            
