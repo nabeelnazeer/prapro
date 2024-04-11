@@ -31,4 +31,19 @@ def download_images(link, output_folder, num_images):
                     f.write(chunk)
         else:
             print(f"{filename} already exists, skipping. ")
-                             
+
+def monitor_performance(interval):
+    while true:
+
+        cpu_percent = psutil.cpu_percent(interval=None)
+
+        print(f"cpu usage : {cpu_percent}%")
+
+
+        #network usage
+
+        net_usage = psutil.net_io_counters()
+        print(f"Network Usage - Sent: {net_usage.bytes_sent} bytes, Received: {net_usage.bytes_recv} bytes")
+
+        
+           
