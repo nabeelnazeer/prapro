@@ -3,7 +3,7 @@ import requests
 import os
 import psutil
 import time
-import threading
+# import threading
 
 def download_file(url, local_filename):
     with requests.get(url, stream=True) as r:
@@ -49,13 +49,13 @@ def main():
     num_images = 1000
 
     monitor_interval = 10
-    monitor_thread = threading.Thread(target=monitor_performance, args=(monitor_interval,))
+    # monitor_thread = threading.Thread(target=monitor_performance, args=(monitor_interval,))
 
-    monitor_thread.start()
+    # monitor_thread.start()
 
     download_images(link, output_folder, num_images)
 
-    monitor_thread.terminate()
+    # monitor_thread.terminate()
 
 if __name__ == "__main__":
     main()
