@@ -1,8 +1,11 @@
+"""
 
-# Create a 1000 x 1000 random numpy array
-# Measure how long the creation takes
-# Convert the array into bytes
-# Recreate the array from the bytes
+Create a 1000 x 1000 random numpy array
+Measure how long the creation takes
+Convert the array into bytes
+Recreate the array from the bytes
+
+"""
 import numpy as np
 import time
 
